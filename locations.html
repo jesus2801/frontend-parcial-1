@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CarRental — Locations & Offices</title>
+    <meta
+      name="description"
+      content="Find CarRental locations and offices near you"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@200..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* Design Tokens (Light only) */
+      :root {
+        /* Colors */
+        --bg: #f7f8fb;
+        --surface: #ffffff;
+        --elev: #ffffff;
+        --text: #0f172a;
+        --muted: #67728a;
+        --subtle: #94a3b8;
+        --border: #e6e8ef;
+        --brand: #111827;
+        --brand-contrast: #ffffff;
+
+        /* Radius & shadow */
+        --radius-xl: 16px;
+        --radius: 12px;
+        --radius-sm: 10px;
+        --shadow-sm: 0 2px 10px rgba(15, 23, 42, 0.05);
+        --shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+
+        /* Spacing scale */
+        --space-0: 0;
+        --space-1: 6px;
+        --space-2: 10px;
+        --space-3: 14px;
+        --space-4: 18px;
+        --space-5: 22px;
+        --space-6: 26px;
+        --space-7: 32px;
+        --space-8: 40px;
+
+        /* Component sizing */
+        --input-h: 42px;
+        --chip-h: 38px;
+        --btn-h: 42px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: "Nunito", system-ui, -apple-system, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+      }
+      img,
+      svg,
+      video {
+        display: block;
+        max-width: 100%;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      /* Layout & Typography */
+      .container {
+        width: min(1160px, 92%);
+        margin-inline: auto;
+      }
+      .section {
+        padding: var(--space-7) 0;
+      }
+      .grid {
+        display: grid;
+        gap: var(--space-3);
+      }
+      h1,
+      h2,
+      h3 {
+        line-height: 1.2;
+        margin: 0 0 var(--space-2);
+      }
+      h1 {
+        font-size: clamp(26px, 3.6vw, 40px);
+        letter-spacing: -0.015em;
+      }
+      h2 {
+        font-size: clamp(20px, 2.6vw, 28px);
+        letter-spacing: -0.01em;
+      }
+      h3 {
+        font-size: clamp(18px, 2vw, 20px);
+      }
+      .muted {
+        color: var(--muted);
+      }
+
+      /* Focus & Motion */
+      :where(a, button, [role="button"], input, select, textarea).focus-ring,
+      :where(
+          a,
+          button,
+          [role="button"],
+          input,
+          select,
+          textarea
+        ):focus-visible {
+        outline: 2px solid #111827;
+        outline-offset: 2px;
+        border-radius: 10px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      /* Header */
+      header.site {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        z-index: 20;
+      }
+      .topbar {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        padding: var(--space-3) 0;
+        flex-wrap: wrap;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        font-weight: 800;
+        letter-spacing: 0.2px;
+        white-space: nowrap;
+        flex-grow: 1;
+      }
+      .logoMark {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: linear-gradient(135deg, #f2f4f7, #fff);
+        display: grid;
+        place-items: center;
+        color: #7b8796;
+        font-size: 12px;
+      }
+
+      nav.primary {
+        order: 2;
+        width: 100%;
+      }
+      nav.primary ul {
+        display: flex;
+        gap: var(--space-2);
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        overflow: auto;
+        scrollbar-width: none;
+      }
+      nav.primary ul::-webkit-scrollbar {
+        display: none;
+      }
+      nav.primary a {
+        color: #334155;
+        padding: 8px 12px;
+        border-radius: 8px;
+        white-space: nowrap;
+        transition: background 0.15s ease;
+      }
+
+      .searchbar {
+        order: 3;
+        width: 100%;
+        display: flex;
+        gap: var(--space-2);
+        align-items: center;
+      }
+      input {
+        flex: 1;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--surface);
+        padding: 0 12px;
+        height: var(--input-h);
+        min-width: 0;
+      }
+
+      .chip {
+        display: inline-grid;
+        place-items: center;
+        height: var(--chip-h);
+        padding: 0 12px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        border-radius: 10px;
+        color: #334155;
+        white-space: nowrap;
+      }
+      .btn {
+        display: inline-grid;
+        place-items: center;
+        height: var(--btn-h);
+        padding: 0 14px;
+        border: none;
+        border-radius: 10px;
+        background: var(--brand);
+        color: var(--brand-contrast);
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.06s ease, box-shadow 0.12s ease,
+          opacity 0.12s ease;
+        box-shadow: var(--shadow-sm);
+      }
+      .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
+      }
+      .btn:active {
+        transform: translateY(0);
+      }
+      .btn.secondary {
+        background: #334155;
+      }
+
+      @media (min-width: 900px) {
+        .topbar {
+          flex-wrap: nowrap;
+        }
+        nav.primary {
+          order: 0;
+          width: auto;
+        }
+        .searchbar {
+          order: 1;
+          margin-left: auto;
+          width: auto;
+        }
+        .searchbar input {
+          width: 240px;
+          flex: 0 0 auto;
+        }
+      }
+
+      /* Locations Specific Styles */
+      .locationsGrid {
+        display: grid;
+        gap: var(--space-4);
+        grid-template-columns: 1fr;
+        margin-top: 3vh;
+      }
+
+      .panel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        box-shadow: var(--shadow-sm);
+        padding: var(--space-5);
+      }
+
+      .location-card {
+        display: grid;
+        gap: var(--space-3);
+        padding: var(--space-4);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--surface);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .location-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+      }
+
+      .location-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: var(--space-3);
+      }
+
+      .location-info {
+        flex: 1;
+      }
+
+      .location-meta {
+        display: flex;
+        gap: var(--space-3);
+        margin-top: var(--space-2);
+        flex-wrap: wrap;
+      }
+
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.9em;
+        color: var(--muted);
+      }
+
+      .map-container {
+        height: 300px;
+        background: #f1f5f9;
+        border-radius: var(--radius);
+        overflow: hidden;
+        display: grid;
+        place-items: center;
+        color: var(--muted);
+        border: 1px solid var(--border);
+      }
+
+      .filters {
+        display: flex;
+        gap: var(--space-2);
+        flex-wrap: wrap;
+        margin-bottom: var(--space-4);
+      }
+
+      .filter-chip {
+        padding: 8px 16px;
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        background: var(--surface);
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .filter-chip.active {
+        background: var(--brand);
+        color: var(--brand-contrast);
+        border-color: var(--brand);
+      }
+
+      @media (min-width: 900px) {
+        .locationsGrid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      /* Footer */
+      footer.site {
+        margin-top: var(--space-8);
+        border-top: 1px solid var(--border);
+        background: var(--surface);
+      }
+      .footerGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--space-4);
+        padding: var(--space-6) 0;
+        color: #475569;
+      }
+      .footNote {
+        padding: var(--space-4) 0;
+        color: #667085;
+        text-align: center;
+        border-top: 1px solid var(--border);
+      }
+
+      /* Responsive */
+      @media (max-width: 900px) {
+        .section {
+          padding: var(--space-5) 0;
+        }
+        .panel {
+          padding: var(--space-4);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .topbar {
+          gap: var(--space-2);
+        }
+        .searchbar {
+          flex-wrap: wrap;
+        }
+        .searchbar input {
+          flex: 1 1 100%;
+        }
+        .searchbar .chip {
+          order: 3;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .container {
+          width: min(1160px, 94%);
+        }
+        nav.primary ul {
+          gap: 6px;
+        }
+        .searchbar {
+          gap: 8px;
+        }
+        .chip {
+          height: 36px;
+          padding: 0 10px;
+        }
+        .footerGrid {
+          grid-template-columns: 1fr 1fr;
+          gap: var(--space-3);
+        }
+      }
+
+      @media (max-width: 380px) {
+        .btn {
+          height: 38px;
+          padding: 0 10px;
+        }
+        .location-header {
+          flex-direction: column;
+        }
+      }
+
+      .active {
+        background: var(--brand);
+        color: var(--brand-contrast);
+      }
+
+      /* Icon helpers */
+      .icon {
+        width: 18px;
+        height: 18px;
+        stroke: currentColor;
+        stroke-width: 2;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex: 0 0 auto;
+      }
+      .icon-lg {
+        width: 64px;
+        height: 64px;
+        stroke: currentColor;
+        stroke-width: 1.75;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .map-text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .map-text p {
+        margin: 0;
+      }
+
+      input {
+        outline: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Inline SVG sprite (icons) -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+      <symbol id="icon-clock" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="9"></circle>
+        <path d="M12 7v5l3 2"></path>
+      </symbol>
+      <symbol id="icon-phone" viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.08 4.18 2 2 0 0 1 4.06 2h3a2 2 0 0 1 2 1.72c.12.9.31 1.77.57 2.61a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.47-1.09a2 2 0 0 1 2.11-.45c.84.26 1.71.45 2.61.57A2 2 0 0 1 22 16.92z"
+        ></path>
+      </symbol>
+      <symbol id="icon-bolt" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"></path>
+      </symbol>
+      <symbol id="icon-plane" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M22 2L11 13"></path>
+        <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
+      </symbol>
+      <symbol id="icon-building" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 21h18"></path>
+        <path d="M6 21V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14"></path>
+        <path d="M9 10h.01M15 10h.01M9 14h.01M15 14h.01"></path>
+        <path d="M12 21v-4"></path>
+      </symbol>
+      <symbol id="icon-umbrella" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2C7 2 3 6 3 11h18c0-5-4-9-9-9z"></path>
+        <path d="M12 11v8a3 3 0 0 1-6 0"></path>
+        <path d="M3 20h18"></path>
+      </symbol>
+      <symbol id="icon-globe" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="9"></circle>
+        <path d="M2.5 12h19"></path>
+        <path d="M12 2.5c3 3 3 16 0 19"></path>
+        <path d="M12 2.5c-3 3-3 16 0 19"></path>
+      </symbol>
+    </svg>
+
+    <!-- Header -->
+    <header class="site">
+      <div class="container topbar">
+        <a class="logo" href="index.html" aria-label="CarRental home">
+          <span class="logoMark" aria-hidden="true">Logo</span>
+          CarRental
+        </a>
+
+        <nav class="primary" aria-label="Primary">
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#deals-title">Vehicles</a></li>
+            <li><a href="locations.html">Locations</a></li>
+            <li><a href="bookings.html">Bookings</a></li>
+            <li><a href="index.html#footer-section">Support</a></li>
+          </ul>
+        </nav>
+
+        <form class="searchbar" role="search" aria-label="Site">
+          <input
+            name="q"
+            type="search"
+            placeholder="Search locations…"
+            aria-label="Search locations"
+          />
+          <button class="btn" type="submit">Search</button>
+          <a class="chip" href="register.html">Register</a>
+          <a class="chip" href="login.html">Login</a>
+        </form>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="container section">
+        <!-- Locations Header -->
+        <header
+          style="text-align: center; max-width: 700px; margin: 0 auto 16px"
+        >
+          <h1>Our Locations</h1>
+          <p class="muted">
+            Find CarRental offices and pickup locations near you. We're
+            available in multiple cities across the country.
+          </p>
+        </header>
+
+        <!-- Filters -->
+        <div class="filters">
+          <div class="filter-chip active">All Locations</div>
+          <div class="filter-chip">Airport</div>
+          <div class="filter-chip">City Center</div>
+          <div class="filter-chip">24/7</div>
+          <div class="filter-chip">EV Charging</div>
+        </div>
+
+        <!-- Map Section -->
+        <div class="panel">
+          <h2>Find a Location Near You</h2>
+          <div class="map-container">
+            <div class="map-text">
+              <svg class="icon-lg" role="img" aria-label="Globe icon">
+                <use href="#icon-globe"></use>
+              </svg>
+              <p>Interactive Map</p>
+              <p class="muted" style="font-size: 0.9em">
+                Search and browse our locations
+              </p>
+            </div>
+          </div>
+
+          <div
+            style="
+              display: grid;
+              grid-template-columns: 1fr;
+              gap: var(--space-3);
+              margin-top: var(--space-4);
+            "
+          >
+            <div class="field">
+              <label for="location-search">Search by City or Address: </label>
+              <input
+                id="location-search"
+                placeholder="Enter city, zip code, or address"
+              />
+            </div>
+            <button class="btn" style="justify-self: start">
+              Find Locations
+            </button>
+          </div>
+        </div>
+
+        <!-- Locations List -->
+        <div class="locationsGrid">
+          <!-- Location 1 -->
+          <div class="location-card">
+            <div class="location-header">
+              <div class="location-info">
+                <h3>Bogotá - Main Office</h3>
+                <p class="muted">Carrera 15 #88-64, Bogotá</p>
+                <div class="location-meta">
+                  <span class="meta-item">
+                    <svg class="icon" aria-hidden="true">
+                      <use href="#icon-clock"></use>
+                    </svg>
+                    8:00 AM - 8:00 PM
+                  </span>
+                  <span class="meta-item">
+                    <svg class="icon" aria-hidden="true">
+                      <use href="#icon-phone"></use>
+                    </svg>
+                    +57 1 555-1234
+                  </span>
+                  <span class="meta-item">
+                    <svg class="icon" aria-hidden="true">
+                      <use href="#icon-bolt"></use>
+                    </svg>
+                    EV Charging
+                  </span>
+                </div>
+              </div>
+              <button class="btn" style="align-self: center">Select</button>
+            </div>
+            <div style="margin-top: var(--space-2)">
+              <p style="margin: 0; font-size: 0.9em">
+                Our flagship location with the largest vehicle selection and
+                premium services.
+              </p>
+            </div>
+          </div>
+
+          <!-- Location 2 -->
+          <div class="location-card">
+            <div class="location-header">
+              <div class="location-info">
+                <h3>El Dorado Airport</h3>
+                <p class="muted">Terminal 1, Local 45, Bogotá</p>
+                <div class="location-meta">
+                  <span class="meta-item">
+                    <svg class="icon" aria-hidden="true">
+                      <use href="#icon-clock"></use>
+                    </svg>
+                    24/7
+                  </span>
+                  <span class="meta-item">
+                    <svg class="icon" aria-hidden="true">
+                      <use href="#icon-phone"></use>
+                    </svg>
+                    +57 1 555-AIRPORT
+                  </span>
+                  <span class="meta-item">
+                    <svg class="icon" aria-hidden="true">
+                      <use href="#icon-plane"></use>
+                    </svg>
+                    Airport
+                  </span>
+                </div>
+              </div>
+              <button class="btn" style="align-self: center">Select</button>
+            </div>
+            <div style="margin-top: var(--space-2)">
+              <p style="margin: 0; font-size: 0.9em">
+                Convenient airport location with quick pickup and drop-off
+                services.
+              </p>
+            </div>
+          </div>
+
+          <!-- Location 3 -->
+          <div class="location-card">
+            <div class="location-header">
+              <div class="location-info">
+                <h3>Medellín - City Center</h3>
+                <p class="muted">Calle 10 #43-25, Medellín</p>
+                <div class="location-meta">
+                  <span class="meta-item">
+                    <svg class="icon" aria-hidden="true">
+                      <use href="#icon-clock"></use>
+                    </svg>
+                    7:00 AM - 10:00 PM
+                  </span>
+                  <span class="meta-item">
+                    <svg class="icon" aria-hidden="true">
+                      <use href="#icon-phone"></use>
+                    </svg>
+                    +57 4 555-5678
+                  </span>
+                  <span class="meta-item">
+                    <svg class="icon" aria-hidden="true">
+                      <use href="#icon-building"></use>
+                    </svg>
+                    City Center
+                  </span>
+                </div>
+              </div>
+              <button class="btn" style="align-self: center">Select</button>
+            </div>
+            <div style="margin-top: var(--space-2)">
+              <p style="margin: 0; font-size: 0.9em">
+                Centrally located in the heart of Medellín with easy access to
+                major highways.
+              </p>
+            </div>
+          </div>
+
+          <!-- Location 4 -->
+          <div class="location-card">
+            <div class="location-header">
+              <div class="location-info">
+                <h3>Cartagena - Beach Office</h3>
+                <p class="muted">Avenida San Martín #5-87, Cartagena</p>
+                <div class="location-meta">
+                  <span class="meta-item">
+                    <svg class="icon" aria-hidden="true">
+                      <use href="#icon-clock"></use>
+                    </svg>
+                    8:00 AM - 8:00 PM
+                  </span>
+                  <span class="meta-item">
+                    <svg class="icon" aria-hidden="true">
+                      <use href="#icon-phone"></use>
+                    </svg>
+                    +57 5 555-9012
+                  </span>
+                  <span class="meta-item">
+                    <svg class="icon" aria-hidden="true">
+                      <use href="#icon-umbrella"></use>
+                    </svg>
+                    Beach
+                  </span>
+                </div>
+              </div>
+              <button class="btn" style="align-self: center">Select</button>
+            </div>
+            <div style="margin-top: var(--space-2)">
+              <p style="margin: 0; font-size: 0.9em">
+                Perfect for beach getaways with a selection of convertibles and
+                SUVs.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site" role="contentinfo">
+      <div class="container footerGrid">
+        <div>
+          <strong>About us</strong
+          ><br />Mobile<br />FAQ<br />Careers<br />Return policy<br />Privacy<br />Terms
+          of use
+        </div>
+        <div>
+          <strong>Gift cards</strong><br />Brand<br />Contact us<br />Press<br />International<br />Support<br />Unsubscribe
+        </div>
+        <div>
+          <strong>Explore</strong
+          ><br />News<br />Media<br />Cars<br />Pricing<br />Locations
+        </div>
+        <div>
+          <strong>Social</strong><br />Twitter<br />Instagram<br />YouTube
+        </div>
+      </div>
+      <div class="container footNote">
+        © 2025 CarRental — All rights reserved
+      </div>
+    </footer>
+
+    <script>
+      // Redirecciones
+      document.addEventListener("DOMContentLoaded", function () {
+        // Redirigir al hacer clic en Register/Login
+        const registerBtn = document.querySelector('a[href="register.html"]');
+        const loginBtn = document.querySelector('a[href="login.html"]');
+
+        if (registerBtn) {
+          registerBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            window.location.href = "register.html";
+          });
+        }
+
+        if (loginBtn) {
+          loginBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            window.location.href = "login.html";
+          });
+        }
+
+        // Redirigir al hacer clic en el logo
+        const logo = document.querySelector('.logo[href="index.html"]');
+        if (logo) {
+          logo.addEventListener("click", function (e) {
+            e.preventDefault();
+            window.location.href = "index.html";
+          });
+        }
+
+        // Filtros de ubicación
+        const filterChips = document.querySelectorAll(".filter-chip");
+        filterChips.forEach((chip) => {
+          chip.addEventListener("click", function () {
+            filterChips.forEach((c) => c.classList.remove("active"));
+            this.classList.add("active");
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
