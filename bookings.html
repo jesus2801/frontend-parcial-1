@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CarRental — Bookings & Reservations</title>
+    <meta name="description" content="Manage your car rental bookings and reservations" />
+    
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200..900&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ========= Design Tokens (Light only) ========= */
+        :root {
+            /* Colors */
+            --bg: #f7f8fb;
+            --surface: #ffffff;
+            --elev: #ffffff;
+            --text: #0f172a;
+            --muted: #67728a;
+            --subtle: #94a3b8;
+            --border: #e6e8ef;
+            --brand: #111827;
+            --brand-contrast: #ffffff;
+
+            /* Radius & shadow */
+            --radius-xl: 16px;
+            --radius: 12px;
+            --radius-sm: 10px;
+            --shadow-sm: 0 2px 10px rgba(15, 23, 42, 0.05);
+            --shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+
+            /* Spacing scale */
+            --space-0: 0;
+            --space-1: 6px;
+            --space-2: 10px;
+            --space-3: 14px;
+            --space-4: 18px;
+            --space-5: 22px;
+            --space-6: 26px;
+            --space-7: 32px;
+            --space-8: 40px;
+
+            /* Component sizing */
+            --input-h: 42px;
+            --chip-h: 38px;
+            --btn-h: 42px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+        html,
+        body {
+            height: 100%;
+        }
+        body {
+            margin: 0;
+            font-family: "Nunito", system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+        img,
+        svg,
+        video {
+            display: block;
+            max-width: 100%;
+        }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* ========= Layout & Typography ========= */
+        .container {
+            width: min(1160px, 92%);
+            margin-inline: auto;
+        }
+        .section {
+            padding: var(--space-7) 0;
+        }
+        .grid {
+            display: grid;
+            gap: var(--space-3);
+        }
+        h1,
+        h2,
+        h3 {
+            line-height: 1.2;
+            margin: 0 0 var(--space-2);
+        }
+        h1 {
+            font-size: clamp(26px, 3.6vw, 40px);
+            letter-spacing: -0.015em;
+        }
+        h2 {
+            font-size: clamp(20px, 2.6vw, 28px);
+            letter-spacing: -0.01em;
+        }
+        h3 {
+            font-size: clamp(18px, 2vw, 20px);
+        }
+        .muted {
+            color: var(--muted);
+        }
+
+        /* ========= Focus & Motion ========= */
+        :where(a, button, [role="button"], input, select, textarea).focus-ring,
+        :where(
+            a,
+            button,
+            [role="button"],
+            input,
+            select,
+            textarea
+        ):focus-visible {
+            outline: 2px solid #111827;
+            outline-offset: 2px;
+            border-radius: 10px;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* ========= Header ========= */
+        header.site {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+        .topbar {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) 0;
+            flex-wrap: wrap;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-weight: 800;
+            letter-spacing: 0.2px;
+            white-space: nowrap;
+        }
+        .logoMark {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: linear-gradient(135deg, #f2f4f7, #fff);
+            display: grid;
+            place-items: center;
+            color: #7b8796;
+            font-size: 12px;
+        }
+
+        nav.primary {
+            order: 2;
+            width: 100%;
+        }
+        nav.primary ul {
+            display: flex;
+            gap: var(--space-2);
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow: auto;
+            scrollbar-width: none;
+        }
+        nav.primary ul::-webkit-scrollbar {
+            display: none;
+        }
+        nav.primary a {
+            color: #334155;
+            padding: 8px 12px;
+            border-radius: 8px;
+            white-space: nowrap;
+            transition: background 0.15s ease;
+        }
+
+        .searchbar {
+            order: 3;
+            width: 100%;
+            display: flex;
+            gap: var(--space-2);
+            align-items: center;
+        }
+        .searchbar input {
+            flex: 1;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: var(--surface);
+            padding: 0 12px;
+            height: var(--input-h);
+            min-width: 0;
+        }
+
+        .chip {
+            display: inline-grid;
+            place-items: center;
+            height: var(--chip-h);
+            padding: 0 12px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            border-radius: 10px;
+            color: #334155;
+            white-space: nowrap;
+        }
+        .btn {
+            display: inline-grid;
+            place-items: center;
+            height: var(--btn-h);
+            padding: 0 14px;
+            border: none;
+            border-radius: 10px;
+            background: var(--brand);
+            color: var(--brand-contrast);
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.06s ease, box-shadow 0.12s ease,
+            opacity 0.12s ease;
+            box-shadow: var(--shadow-sm);
+        }
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .btn.secondary {
+            background: #334155;
+        }
+
+        @media (min-width: 900px) {
+            .topbar {
+                flex-wrap: nowrap;
+            }
+            nav.primary {
+                order: 0;
+                width: auto;
+            }
+            .searchbar {
+                order: 1;
+                margin-left: auto;
+                width: auto;
+            }
+            .searchbar input {
+                width: 240px;
+                flex: 0 0 auto;
+            }
+        }
+
+        /* ========= Bookings Specific Styles ========= */
+        .bookingGrid {
+            display: grid;
+            gap: var(--space-4);
+        }
+        .miniGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+            gap: var(--space-2);
+            margin-top: var(--space-2);
+        }
+        .mini {
+            background: #f4f6f9;
+            border: 1px dashed var(--border);
+            border-radius: 10px;
+            aspect-ratio: 1/1;
+            display: grid;
+            place-items: center;
+            color: var(--subtle);
+        }
+        .formGrid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-3);
+        }
+        
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            padding: var(--space-5);
+        }
+
+        .field {
+            display: grid;
+            gap: 6px;
+        }
+        label {
+            font-weight: 600;
+        }
+        input,
+        select {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--surface);
+            padding: 0 12px;
+            height: var(--input-h);
+            outline: none;
+            min-width: 0;
+            transition: border-color 0.12s ease, box-shadow 0.12s ease;
+        }
+        input:focus,
+        select:focus {
+            border-color: #cbd5e1;
+            box-shadow: 0 0 0 4px rgba(17, 24, 39, 0.06);
+            outline: none;
+        }
+
+        @media (min-width: 900px) {
+            .bookingGrid {
+                grid-template-columns: 1.2fr 1fr;
+            }
+            .formGrid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* ========= Footer ========= */
+        footer.site {
+            margin-top: var(--space-8);
+            border-top: 1px solid var(--border);
+            background: var(--surface);
+        }
+        .footerGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+            padding: var(--space-6) 0;
+            color: #475569;
+        }
+        .footNote {
+            padding: var(--space-4) 0;
+            color: #667085;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ========= Responsive ========= */
+        @media (max-width: 900px) {
+            .section {
+                padding: var(--space-5) 0;
+            }
+            .panel {
+                padding: var(--space-4);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .topbar {
+                gap: var(--space-2);
+            }
+            .searchbar {
+                flex-wrap: wrap;
+            }
+            .searchbar input {
+                flex: 1 1 100%;
+            }
+            .searchbar .chip {
+                order: 3;
+            }
+            .miniGrid {
+                grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+            }
+        }
+
+        @media (max-width: 560px) {
+            .container {
+                width: min(1160px, 94%);
+            }
+            nav.primary ul {
+                gap: 6px;
+            }
+            .searchbar {
+                gap: 8px;
+            }
+            .chip {
+                height: 36px;
+                padding: 0 10px;
+            }
+            .formGrid {
+                grid-template-columns: 1fr;
+            }
+            .footerGrid {
+                grid-template-columns: 1fr 1fr;
+                gap: var(--space-3);
+            }
+        }
+
+        @media (max-width: 380px) {
+            .btn {
+                height: 38px;
+                padding: 0 10px;
+            }
+        }
+
+        .active {
+            background: var(--brand);
+            color: var(--brand-contrast);
+        }
+
+        /* ========= Icon helpers ========= */
+        .icon {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            display: inline-block;
+        }
+
+        .icon-btn {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Inline SVG sprite (icons) -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+        <!-- Car (compact) -->
+        <symbol id="icon-car" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 13l2-5a3 3 0 0 1 2.8-2h8.4a3 3 0 0 1 2.8 2l2 5"></path>
+            <path d="M5 16h14a2 2 0 0 0 2-2v-1H3v1a2 2 0 0 0 2 2z"></path>
+            <circle cx="7" cy="16" r="2"></circle>
+            <circle cx="17" cy="16" r="2"></circle>
+        </symbol>
+        <symbol id="icon-suv" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M2 13h20v2a2 2 0 0 1-2 2h-2"></path>
+            <path d="M4 13l2.5-4H15l3 4"></path>
+            <circle cx="7" cy="17" r="2"></circle>
+            <circle cx="17" cy="17" r="2"></circle>
+        </symbol>
+        <symbol id="icon-van" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M2 14V9a2 2 0 0 1 2-2h9l5 4h2a2 2 0 0 1 2 2v1H2z"></path>
+            <circle cx="7" cy="16" r="2"></circle>
+            <circle cx="18" cy="16" r="2"></circle>
+            <path d="M13 7v3h4"></path>
+        </symbol>
+        <symbol id="icon-bolt" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"></path>
+        </symbol>
+        <symbol id="icon-calendar" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="16" rx="2"></rect>
+            <path d="M16 3v4M8 3v4M3 11h18"></path>
+        </symbol>
+        <symbol id="icon-check" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 6L9 17l-5-5"></path>
+        </symbol>
+        <symbol id="icon-hourglass" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 2h12M6 22h12"></path>
+            <path d="M6 2c0 6 12 6 12 12s-12 6-12 12"></path>
+        </symbol>
+        <symbol id="icon-dollar" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 1v22"></path>
+            <path d="M17 5a5 4 0 1 0-5 4h0a5 4 0 1 1-5 4"></path>
+        </symbol>
+        <symbol id="icon-phone" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.08 4.18 2 2 0 0 1 4.06 2h3a2 2 0 0 1 2 1.72c.12.9.31 1.77.57 2.61a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.47-1.09a2 2 0 0 1 2.11-.45c.84.26 1.71.45 2.61.57A2 2 0 0 1 22 16.92z"></path>
+        </symbol>
+    </svg>
+
+    <!-- Header -->
+    <header class="site">
+        <div class="container topbar">
+            <a class="logo" href="index.html" aria-label="CarRental home">
+                <span class="logoMark" aria-hidden="true">Logo</span>
+                CarRental
+            </a>
+
+            <nav class="primary" aria-label="Primary">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#deals-title">Vehicles</a></li>
+                    <li><a href="locations.html">Locations</a></li>
+                    <li><a href="bookings.html">Bookings</a></li>
+                    <li><a href="index.html#footer-section">Support</a></li>
+                </ul>
+            </nav>
+
+            <form class="searchbar" role="search" aria-label="Site">
+                <input
+                    name="q"
+                    type="search"
+                    placeholder="Search bookings…"
+                    aria-label="Search bookings"
+                />
+                <button class="btn" type="submit">Search</button>
+                <a class="chip" href="register.html">Register</a>
+                <a class="chip" href="login.html">Login</a>
+            </form>
+        </div>
+    </header>
+
+    <main id="main">
+        <div class="container section">
+            <!-- Bookings Header -->
+            <header style="text-align: center; max-width: 700px; margin: 0 auto 16px">
+                <h1>Manage Your Bookings</h1>
+                <p class="muted">
+                    View, create, and manage your car rental reservations in one place.
+                </p>
+            </header>
+
+            <!-- Bookings Content -->
+            <div class="bookingGrid">
+                <div class="panel">
+                    <h2>Current Bookings</h2>
+                    <div class="miniGrid">
+                        <div class="mini">
+                            <span style="font-size: 0.8em; text-align: center;">
+                                <svg class="icon" aria-hidden="true"><use href="#icon-car"></use></svg><br>Compact
+                            </span>
+                        </div>
+                        <div class="mini">
+                            <span style="font-size: 0.8em; text-align: center;">
+                                <svg class="icon" aria-hidden="true"><use href="#icon-suv"></use></svg><br>SUV
+                            </span>
+                        </div>
+                        <div class="mini">
+                            <span style="font-size: 0.8em; text-align: center;">
+                                <svg class="icon" aria-hidden="true"><use href="#icon-van"></use></svg><br>Van
+                            </span>
+                        </div>
+                        <div class="mini">
+                            <span style="font-size: 0.8em; text-align: center;">
+                                <svg class="icon" aria-hidden="true"><use href="#icon-bolt"></use></svg><br>EV
+                            </span>
+                        </div>
+                    </div>
+
+                    <h2 style="margin-top: var(--space-4)">Create New Booking</h2>
+                    <div class="panel" style="padding: var(--space-4); margin-top: var(--space-2); background: var(--bg)">
+                        <form class="formGrid" aria-label="Car rental reservation form">
+                            <div class="field">
+                                <label for="nb-name">Full Name</label>
+                                <input
+                                    id="nb-name"
+                                    placeholder="Enter your full name"
+                                    autocomplete="name"
+                                    required
+                                />
+                            </div>
+                            <div class="field">
+                                <label for="nb-phone">Phone Number</label>
+                                <input
+                                    id="nb-phone"
+                                    placeholder="+57 300 000 0000"
+                                    autocomplete="tel"
+                                    required
+                                />
+                            </div>
+                            <div class="field">
+                                <label for="nb-email">Email Address</label>
+                                <input
+                                    id="nb-email"
+                                    type="email"
+                                    placeholder="you@example.com"
+                                    autocomplete="email"
+                                    required
+                                />
+                            </div>
+                            <div class="field">
+                                <label for="nb-type">Vehicle Type</label>
+                                <select id="nb-type" required>
+                                    <option value="">Select vehicle type</option>
+                                    <option>Compact Car</option>
+                                    <option>Sedan</option>
+                                    <option>SUV</option>
+                                    <option>Van</option>
+                                    <option>Electric Vehicle</option>
+                                    <option>Luxury Car</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label for="nb-date">Pick-Up Date</label>
+                                <input id="nb-date" type="date" required />
+                            </div>
+                            <div class="field">
+                                <label for="nb-time">Pick-Up Time</label>
+                                <input id="nb-time" type="time" required />
+                            </div>
+                            <div class="field" style="grid-column: 1 / -1">
+                                <label for="nb-location">Pick-Up Location</label>
+                                <select id="nb-location" required>
+                                    <option value="">Select location</option>
+                                    <option>Bogotá - Main Office</option>
+                                    <option>Medellín - City Center</option>
+                                    <option>Cali - Airport</option>
+                                    <option>Cartagena - Beach Office</option>
+                                </select>
+                            </div>
+                        </form>
+                        <div style="margin-top: var(--space-3); text-align: center">
+                            <button class="btn" type="submit" style="min-width: 200px">
+                                Create Booking
+                            </button>
+                        </div>
+                    </div>
+
+                    <h2 style="margin-top: var(--space-4)">Recent Bookings</h2>
+                    <div class="miniGrid">
+                        <div class="mini">#1254</div>
+                        <div class="mini">#1255</div>
+                        <div class="mini">#1256</div>
+                        <div class="mini">#1257</div>
+                    </div>
+
+                    <h2 style="margin-top: var(--space-4)">Booking History</h2>
+                    <div class="miniGrid">
+                        <div class="mini">Jan</div>
+                        <div class="mini">Feb</div>
+                        <div class="mini">Mar</div>
+                        <div class="mini">2024</div>
+                    </div>
+                </div>
+
+                <!-- Right column: booking dashboard -->
+                <div class="panel">
+                    <h2>Booking Summary</h2>
+                    <div class="miniGrid">
+                        <div class="mini">
+                            <span style="font-size: 0.8em; text-align: center;">
+                                <svg class="icon" aria-hidden="true"><use href="#icon-calendar"></use></svg><br>Active
+                            </span>
+                        </div>
+                        <div class="mini">
+                            <span style="font-size: 0.8em; text-align: center;">
+                                <svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg><br>Completed
+                            </span>
+                        </div>
+                        <div class="mini">
+                            <span style="font-size: 0.8em; text-align: center;">
+                                <svg class="icon" aria-hidden="true"><use href="#icon-hourglass"></use></svg><br>Upcoming
+                            </span>
+                        </div>
+                        <div class="mini">
+                            <span style="font-size: 0.8em; text-align: center;">
+                                <svg class="icon" aria-hidden="true"><use href="#icon-dollar"></use></svg><br>Total
+                            </span>
+                        </div>
+                    </div>
+
+                    <h2 style="margin-top: var(--space-4)">Quick Actions</h2>
+                    <div style="display: grid; gap: var(--space-2); margin-top: var(--space-2)">
+                        <button class="btn secondary">Modify Booking</button>
+                        <button class="btn secondary">Cancel Reservation</button>
+                        <button class="btn secondary">Extend Rental</button>
+                        <button class="btn">Contact Support</button>
+                    </div>
+
+                    <h2 style="margin-top: var(--space-4)">Need Help?</h2>
+                    <p class="muted" style="margin-top: var(--space-2)">
+                        Our support team is available 24/7 to assist with any questions about your bookings.
+                    </p>
+                    <div style="margin-top: var(--space-3)">
+                        <button class="btn" style="width: 100%; display: flex; justify-content: center;">
+                            <svg class="icon icon-btn" aria-hidden="true"><use href="#icon-phone"></use></svg>
+                            Call Support
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site" role="contentinfo">
+        <div class="container footerGrid">
+            <div>
+                <strong>About us</strong
+                ><br />Mobile<br />FAQ<br />Careers<br />Return policy<br />Privacy<br />Terms
+                of use
+            </div>
+            <div>
+                <strong>Gift cards</strong><br />Brand<br />Contact us<br />Press<br />International<br />Support<br />Unsubscribe
+            </div>
+            <div>
+                <strong>Explore</strong
+                ><br />News<br />Media<br />Cars<br />Pricing<br />Locations
+            </div>
+            <div>
+                <strong>Social</strong><br />Twitter<br />Instagram<br />YouTube
+            </div>
+        </div>
+        <div class="container footNote">
+            © 2025 CarRental — All rights reserved
+        </div>
+    </footer>
+
+    <script>
+        // Redirecciones
+        document.addEventListener('DOMContentLoaded', function() {
+            // Redirigir al hacer clic en Register/Login
+            const registerBtn = document.querySelector('a[href="register.html"]');
+            const loginBtn = document.querySelector('a[href="login.html"]');
+            
+            if (registerBtn) {
+                registerBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.location.href = 'register.html';
+                });
+            }
+            
+            if (loginBtn) {
+                loginBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.location.href = 'login.html';
+                });
+            }
+
+            // Redirigir al hacer clic en el logo
+            const logo = document.querySelector('.logo[href="index.html"]');
+            if (logo) {
+                logo.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.location.href = 'index.html';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
