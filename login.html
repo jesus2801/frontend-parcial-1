@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CarRental — Login</title>
+    <meta name="description" content="Sign in to your CarRental account." />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@200..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* Design Tokens */
+      :root {
+        --bg: #f7f8fb;
+        --surface: #ffffff;
+        --elev: #ffffff;
+        --text: #0f172a;
+        --muted: #67728a;
+        --subtle: #94a3b8;
+        --border: #e6e8ef;
+        --brand: #111827;
+        --brand-contrast: #ffffff;
+        --radius-xl: 16px;
+        --radius: 12px;
+        --radius-sm: 10px;
+        --shadow-sm: 0 2px 10px rgba(15, 23, 42, 0.05);
+        --shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+        --space-0: 0;
+        --space-1: 6px;
+        --space-2: 10px;
+        --space-3: 14px;
+        --space-4: 18px;
+        --space-5: 22px;
+        --space-6: 26px;
+        --space-7: 32px;
+        --space-8: 40px;
+        --input-h: 42px;
+        --btn-h: 42px;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: "Nunito", system-ui, -apple-system, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      img,
+      svg {
+        display: block;
+        max-width: 100%;
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      :where(a, button, [role="button"], input, select, textarea).focus-ring,
+      :where(
+          a,
+          button,
+          [role="button"],
+          input,
+          select,
+          textarea
+        ):focus-visible {
+        outline: 2px solid #111827;
+        outline-offset: 2px;
+        border-radius: 10px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      /* Header (minimal) */
+      header.site {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      .topbar {
+        width: min(1160px, 92%);
+        margin-inline: auto;
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        padding: var(--space-3) 0;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        font-weight: 800;
+        letter-spacing: 0.2px;
+        white-space: nowrap;
+      }
+      .logoMark {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: linear-gradient(135deg, #f2f4f7, #fff);
+        display: grid;
+        place-items: center;
+        color: #7b8796;
+        font-size: 12px;
+      }
+
+      /* Auth Card Layout */
+      .wrap {
+        min-height: calc(100dvh - 82px); /* header height approx */
+        display: grid;
+        place-items: center;
+        padding: var(--space-7) var(--space-3);
+      }
+      .card {
+        width: min(480px, 92%);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow);
+        padding: var(--space-6);
+      }
+      h1 {
+        font-size: clamp(24px, 3vw, 32px);
+        margin: 0 0 var(--space-2);
+        letter-spacing: -0.01em;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .field {
+        display: grid;
+        gap: 6px;
+      }
+      label {
+        font-weight: 700;
+      }
+      input {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--surface);
+        padding: 0 12px;
+        height: var(--input-h);
+        outline: none;
+        min-width: 0;
+        transition: border-color 0.12s ease, box-shadow 0.12s ease;
+      }
+      input:focus {
+        border-color: #cbd5e1;
+        box-shadow: 0 0 0 4px rgba(17, 24, 39, 0.06);
+      }
+      .stack {
+        display: grid;
+        gap: var(--space-3);
+      }
+      .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      }
+      .checkbox {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .btn {
+        display: inline-grid;
+        place-items: center;
+        height: var(--btn-h);
+        padding: 0 14px;
+        border: none;
+        border-radius: 10px;
+        background: var(--brand);
+        color: var(--brand-contrast);
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.06s ease, box-shadow 0.12s ease;
+        box-shadow: var(--shadow-sm);
+      }
+      .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
+      }
+      .btn.secondary {
+        background: #334155;
+      }
+      .divider {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        color: var(--subtle);
+        gap: 10px;
+      }
+      .divider::before,
+      .divider::after {
+        content: "";
+        height: 1px;
+        background: var(--border);
+      }
+
+      .foot {
+        margin-top: var(--space-4);
+        text-align: center;
+        color: #475569;
+      }
+
+      @media (max-width: 560px) {
+        .card {
+          padding: var(--space-5);
+        }
+        .btn {
+          height: 40px;
+          padding: 0 12px;
+        }
+      }
+    </style>
+  </head>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Redirigir al hacer clic en "Register" desde login
+      const registerBtn = document.querySelector('a[href="/register.html"]');
+      if (registerBtn) {
+        registerBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          window.location.href = "register.html";
+        });
+      }
+
+      // Redirigir al hacer clic en el logo para volver al index
+      const logo = document.querySelector('.logo[href="index.html"]');
+      if (logo) {
+        logo.addEventListener("click", function (e) {
+          e.preventDefault();
+          window.location.href = "index.html";
+        });
+      }
+
+      // También puedes agregar redirección después de login exitoso
+      const loginForm = document.querySelector('form[role="search"]');
+      if (loginForm) {
+        loginForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          // Aquí iría la lógica de validación
+          // Si el login es exitoso:
+          // window.location.href = 'index.html';
+        });
+      }
+    });
+  </script>
+  <body>
+    <!-- Header -->
+    <header class="site" role="banner">
+      <div class="topbar">
+        <a class="logo" href="/index.html" aria-label="CarRental home">
+          <span class="logoMark" aria-hidden="true">Logo</span>
+          CarRental
+        </a>
+      </div>
+    </header>
+
+    <main class="wrap" id="main">
+      <section class="card" aria-labelledby="login-title">
+        <header style="margin-bottom: var(--space-3)">
+          <h1 id="login-title">Welcome back</h1>
+          <p class="muted">Sign in to manage your bookings and profile.</p>
+        </header>
+
+        <form
+          class="stack"
+          aria-describedby="login-hint"
+          action="#"
+          method="post"
+          novalidate
+        >
+          <span id="login-hint" class="sr-only">All fields are required.</span>
+
+          <div class="field">
+            <label for="email">Email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              autocomplete="email"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <div class="row">
+              <label for="password">Password</label>
+              <a href="#" class="muted" style="font-weight: 600"
+                >Forgot password?</a
+              >
+            </div>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              required
+            />
+          </div>
+
+          <div class="row" style="margin-top: -6px">
+            <label class="checkbox">
+              <input type="checkbox" name="remember" aria-label="Remember me" />
+              <span>Remember me</span>
+            </label>
+          </div>
+
+          <button class="btn" type="submit">Sign in</button>
+
+          <div class="divider" aria-hidden="true">or</div>
+
+          <button
+            class="btn secondary"
+            type="button"
+            aria-label="Continue with provider"
+          >
+            Continue with Google
+          </button>
+        </form>
+
+        <p class="foot">
+          New to CarRental?
+          <a href="register.html" style="text-decoration: underline"
+            >Create an account</a
+          >
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
